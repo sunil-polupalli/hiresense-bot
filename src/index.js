@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const { createBot } = require("./bot");
 
@@ -13,6 +14,7 @@ if (!TELEGRAM_BOT_TOKEN) {
   console.error("❌ TELEGRAM_BOT_TOKEN is not set in .env");
   process.exit(1);
 }
+
 if (!process.env.GROQ_API_KEY) {
   console.error("❌ GROQ_API_KEY is not set in .env");
   process.exit(1);
@@ -31,19 +33,36 @@ async function start() {
     app.use(express.json());
 
     const webhookPath = "/webhook";
+
     app.use(bot.webhookCallback(webhookPath));
 
-    app.get("/", (req, res) => res.send("HireSense AI bot is running."));
+    app.get("/", (req, res) =>
+      res.send("HireSense AI bot is running.")
+    );
 
-    await bot.telegram.setWebhook(`${WEBHOOK_URL}${webhookPath}`);
-    app.listen(PORT, () => {
-      console.log(`🚀 HireSense AI bot running in webhook mode on port ${PORT}`);
-      console.log(`   Webhook set to: ${WEBHOOK_URL}${webhookPath}`);
+    await bot.telegram.setWebhook(
+      `${WEBHOOK_URL}${webhookPath}`
+    );
+
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(
+        `🚀 HireSense AI bot running in webhook mode on port ${PORT}`
+      );
+
+      console.log(
+        `   Webhook set to: ${WEBHOOK_URL}${webhookPath}`
+      );
     });
+
   } else {
+
     await bot.telegram.deleteWebhook().catch(() => {});
+
     await bot.launch();
-    console.log("🚀 HireSense AI bot running in polling mode (local dev).");
+
+    console.log(
+      "🚀 HireSense AI bot running in polling mode (local dev)."
+    );
   }
 }
 
