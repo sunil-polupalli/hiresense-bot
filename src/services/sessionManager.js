@@ -1,9 +1,3 @@
-/**
- * Simple in-memory session store keyed by chatId.
- * For production scale, swap this for a MongoDB-backed store
- * (schema is already compatible — see models/Session.js if you add persistence).
- */
-
 const STATES = {
   IDLE: "IDLE",
   AWAITING_JD: "AWAITING_JD",
